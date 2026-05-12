@@ -1,69 +1,112 @@
 # Fraud Model Monitoring Pipeline
 
-Built a PySpark-based data engineering pipeline to simulate real-world fraud monitoring and analytics workflows.
+A PySpark-based data pipeline built to mimic how fraud monitoring systems track model behavior in real-world payment platforms.
+
+This project focuses on computing key monitoring metrics like TRR (Transaction Review Rate), score distribution, and high-risk patterns, outputs typically consumed by fraud analytics and risk teams.
 
 ---
 
-## Problem Statement
+## Why this project
 
-In fraud detection systems, it's critical to monitor model behavior continuously.  
-Metrics like Transaction Review Rate (TRR), score distribution, and high-risk patterns help detect model drift and performance issues.
+In production fraud systems, models don’t just run, they are continuously monitored.
 
-This project simulates that pipeline.
+Small shifts in score distribution or review rates can indicate:
+
+* model drift
+* data quality issues
+* unexpected traffic patterns
+
+This pipeline represents a simplified version of that monitoring layer.
 
 ---
 
-## What this pipeline does
+## What the pipeline does
 
-- Reads transaction data
-- Performs data quality validation
-- Calculates TRR (Transaction Review Rate)
-- Generates fraud score bucket distribution
-- Identifies high-risk transaction patterns
-- Writes processed outputs for reporting
+* Reads transaction-level data from CSV
+* Runs data quality checks
+* Computes TRR (Transaction Review Rate)
+* Builds fraud score bucket distributions
+* Generates high-risk transaction summaries
+* Writes outputs as report-ready datasets
 
 ---
 
 ## Tech Stack
 
-- Python 3.10
-- PySpark (Spark 3.5)
-- Pandas
-- SQL
-- Git / GitHub
+* Python 3.10
+* PySpark (Spark 3.5)
+* Pandas (for local output handling)
+* SQL (validation queries)
+* Git / GitHub
+
+---
+
+## Data Schema (Sample)
+
+| Column           | Description                    |
+| ---------------- | ------------------------------ |
+| transaction_id   | Unique transaction identifier  |
+| transaction_date | Date of transaction            |
+| model_version    | Fraud model version            |
+| fraud_score      | Model score (0–1)              |
+| review_flag      | 1 if flagged for manual review |
+| region           | Transaction region             |
 
 ---
 
 ## Pipeline Flow
 
-1. Data ingestion from CSV
-2. Data quality checks
-3. Aggregations (TRR, score buckets)
-4. High-risk transaction analysis
-5. Output generation
+```
+Raw CSV Data
+     ↓
+Data Quality Checks
+     ↓
+Transformations (TRR, Score Buckets)
+     ↓
+Aggregations (High Risk Summary)
+     ↓
+Output Reports (CSV)
+---
+
+## Sample Output
+
+### TRR Results
+
+| transaction_date | model_version | total_transactions | reviewed_transactions | trr  |
+| ---------------- | ------------- | ------------------ | --------------------- | ---- |
+| 2024-01-01       | v1            | 1000               | 120                   | 0.12 |
+
+### High Risk Summary
+
+| transaction_date | region | high_risk_rate |
+| ---------------- | ------ | -------------- |
+| 2024-01-01       | US     | 0.08           |
 
 ---
 
-## Output Generated
+## What I focused on
 
-- Data Quality Report
-- TRR Metrics
-- Score Bucket Distribution
-- High Risk Summary
+This project goes beyond basic transformations.
 
+Key areas I worked through:
+
+* Setting up Spark locally on Windows
+* Debugging Spark session and worker issues
+* Handling Hadoop / winutils dependency problems
+* Fixing Python environment conflicts with PySpark
+* Designing aggregation logic for monitoring metrics
+
+These are the kinds of issues that typically show up in real-world data engineering environments.
 ---
-
-## Key Learning
-
-- Built end-to-end ETL pipeline using PySpark
-- Debugged Spark + Hadoop issues on Windows
-- Implemented aggregation logic similar to production systems
-- Handled environment-level failures and resolved them
-
----
-
-## How to Run
-
-bash
+## How to run
+```
 pip install -r requirements.txt
 python -m src.pipeline
+```
+Outputs will be generated in:
+data/output/
+```
+## Author
+
+Rithik V
+Senior Data Engineer
