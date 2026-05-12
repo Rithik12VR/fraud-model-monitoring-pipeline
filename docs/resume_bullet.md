@@ -1,0 +1,1 @@
+Built a PySpark-based fraud model monitoring pipeline to process transaction scoring data, calculate Transaction Review Rate (TRR), generate score bucket distributions for drift monitoring, and run SQL-based data quality validations for duplicate, null, and invalid score detection.
